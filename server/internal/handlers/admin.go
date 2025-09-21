@@ -205,7 +205,17 @@ func Reject_correction(c *gin.Context) {
 		return
 	}
 
+	var reqBody struct {
+		Comments string `json:"comments" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "Comments are required for rejection")
+		return
+	}
+
 	var correction models.Correction
+
 	err = config.DB.Collection("corrections").FindOne(context.TODO(), bson.M{"_id": correctionID}).Decode(&correction)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusNotFound, "Correction not found")
@@ -224,6 +234,7 @@ func Reject_correction(c *gin.Context) {
 		bson.M{"_id": correctionID},
 		bson.M{"$set": bson.M{
 			"status":      "rejected",
+			"comments":    reqBody.Comments,
 			"reviewed_at": &now,
 			"reviewed_by": &user.ID,
 		}},

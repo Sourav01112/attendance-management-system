@@ -51,6 +51,7 @@ func main() {
 		api.POST("/checkin", handlers.Check_In)
 		api.POST("/checkout", handlers.Check_out)
 		api.GET("/attendance", handlers.Get_individual_attendance)
+		api.GET("/my-corrections", handlers.Get_individual_corrections)
 		api.POST("/correction", handlers.Request_correction)
 
 		api.POST("/register-employee", handlers.Register_employee)

@@ -202,3 +202,23 @@ func Request_correction(c *gin.Context) {
 
 	utils.SuccessResponse(c, gin.H{"message": "Correction request submitted successfully"})
 }
+
+func Get_individual_corrections(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+
+	opts := options.Find().SetSort(bson.D{{Key: "created_at", Value: -1}})
+	cursor, err := config.DB.Collection("corrections").Find(context.TODO(), bson.M{"user_id": user.ID}, opts)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to fetch")
+		return
+	}
+	defer cursor.Close(context.TODO())
+
+	var corrections []models.Correction
+	if err = cursor.All(context.TODO(), &corrections); err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to decode")
+		return
+	}
+
+	utils.SuccessResponse(c, corrections)
+}

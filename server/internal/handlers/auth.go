@@ -47,7 +47,7 @@ func Login(c *gin.Context) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
-		fmt.Println("three")
+		fmt.Println("three", err)
 
 		utils.ErrorResponse(c, http.StatusUnauthorized, "Invalid credentials")
 		return

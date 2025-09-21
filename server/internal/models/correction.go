@@ -18,6 +18,7 @@ type Correction struct {
 	ExpiresAt         time.Time           `bson:"expires_at" json:"expires_at"`
 	ReviewedAt        *time.Time          `bson:"reviewed_at" json:"reviewed_at"`
 	ReviewedBy        *primitive.ObjectID `bson:"reviewed_by" json:"reviewed_by"`
+	Comments          string              `bson:"comments"  json:"comments"`
 }
 
 type CorrectionRequest struct {
