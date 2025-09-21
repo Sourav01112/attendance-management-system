@@ -1,26 +1,28 @@
-FROM golang:1.24-alpine AS builder
+FROM golang:1.24.5-alpine AS builder
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git ca-certificates tzdata
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
-
 RUN go mod download
 
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main cmd/server/main.go
-
-FROM alpine:3.18
+FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates tzdata
+RUN addgroup -g 1001 appgroup && adduser -u 1001 -G appgroup -s /bin/sh -D appuser
 
-WORKDIR /root/
+WORKDIR /app
 
-COPY --from=builder /app/main .
+COPY --from=builder /app/server .
+
+RUN chown -R appuser:appgroup /app
+USER appuser
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD grpc_health_probe -addr=:50052 || exit 1
+    CMD grpc_health_probe -addr=:50051 || exit 1
 
-CMD ["./main"]
+CMD ["./server"]
