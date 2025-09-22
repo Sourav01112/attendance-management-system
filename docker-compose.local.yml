@@ -3,8 +3,8 @@ services:
     image: mongo:5.0
     container_name: attendance-mongodb
     restart: unless-stopped
-    ports:
-      - "25755:27017"
+#    ports:
+#      - "25756:27017"
     volumes:
     - mongodb_data:/data/db
     - ./mongo-init:/docker-entrypoint-initdb.d
@@ -32,13 +32,14 @@ services:
       context: ./client  
       dockerfile: Dockerfile 
       args:
-        - VITE_API_BASE_URL=http://localhost:8010/api
+        - VITE_API_BASE_URL=https://submission.souravcodes.in/alpha/api
+       #- VITE_API_BASE_URL=http://localhost:8010/api
     container_name: attendance-client
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
-      VITE_API_URL: http://localhost:8010/api
+      VITE_API_URL: https://submission.souravcodes.in/alpha/api
     depends_on:
       - server
 
