@@ -151,7 +151,7 @@ docker exec attendance-mongodb mongorestore --db attendance_db /backup/attendanc
 
 
 
-![Snap](assets/philosophy.png.png)
+![Snap](assets/philosophy.png)
 
 
 
