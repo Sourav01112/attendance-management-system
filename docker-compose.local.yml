@@ -32,14 +32,13 @@ services:
       context: ./client  
       dockerfile: Dockerfile 
       args:
-        - VITE_API_BASE_URL=https://submission.souravcodes.in/alpha/api
-       #- VITE_API_BASE_URL=http://localhost:8010/api
+       - VITE_API_BASE_URL=http://localhost:8010/api
     container_name: attendance-client
     restart: unless-stopped
     ports:
       - "3001:3001"
     environment:
-      VITE_API_URL: https://submission.souravcodes.in/alpha/api
+      VITE_API_URL: http://localhost:8010/alpha/api
     depends_on:
       - server
 
